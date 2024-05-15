@@ -45,12 +45,10 @@ public class TaskManager {
     }
 
     public void deleteSubtasks() {
-
         subtasksMap.clear();
         for (Epic epic : epicsMap.values()) {
             updateEpicStatus(epic);
         }
-        System.out.println("Check Epics subtasksListIds" + Epic.subtasksListIds);
     }
 
     /**
@@ -86,7 +84,10 @@ public class TaskManager {
     public void addSubtask(Subtask subtask) {
         subtask.setId(++idGenerator);
         subtasksMap.put(subtask.getId(), subtask);
-        Epic.subtasksListIds.add(subtask.getId());
+        Epic epic = subtask.getEpic();
+        epic.addSubtasksListIds(subtask);
+        updateEpicStatus(epic);
+
     }
 
     /**
@@ -97,7 +98,7 @@ public class TaskManager {
     }
 
     public void updateEpic(Epic epic) {
-        epic.setSubtasksIds(epicsMap.get(epic.getId()).getSubtasksListIds());
+        epic.setSubtasksListIds(epicsMap.get(epic.getId()).getSubtasksListIds());
         epicsMap.put(epic.getId(), epic);
         updateEpicStatus(epic);
     }
@@ -117,7 +118,7 @@ public class TaskManager {
     public void deleteEpicById(int id) {
         Epic epic = epicsMap.get(id);
         epicsMap.remove(id);
-        epic.setSubtasksIds(new ArrayList<>());
+        epic.setSubtasksListIds(new ArrayList<>());
 
     }
 
@@ -142,8 +143,13 @@ public class TaskManager {
             epic.setStatus(Status.NEW);
             return;
         }
+
         for (Integer subtaskId : epicsSubtasks) {               // запускаем цикл чтобы прошелся по собранным сабтаскам
             Subtask subtask = subtasksMap.get(subtaskId);
+            if (subtask == null) {
+                epic.setStatus(Status.NEW);
+                return;
+            }
             subtaskStatuses.add(subtask.getStatus());
 
         }
