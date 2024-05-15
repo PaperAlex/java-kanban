@@ -1,3 +1,7 @@
+package model;
+
+import java.util.Objects;
+
 public class Task {
 
     protected String name;
@@ -29,8 +33,21 @@ public class Task {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(name, task.name) && Objects.equals(description, task.description) && Objects.equals(id, task.id) && status == task.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
     public String toString() {
-        return "Task{" +
+        return "model.Task{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
