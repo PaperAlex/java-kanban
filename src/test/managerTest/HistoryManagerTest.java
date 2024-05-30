@@ -1,7 +1,7 @@
 package managerTest;
 
 import manager.HistoryManager;
-import manager.InMemoryHistoryManager;
+import manager.Managers;
 import model.Status;
 import model.Task;
 
@@ -16,7 +16,7 @@ public class HistoryManagerTest {
     HistoryManager inMemoryHistoryManager;
     @BeforeEach
     public void beforeEach() {
-        inMemoryHistoryManager = new InMemoryHistoryManager();
+        inMemoryHistoryManager =  Managers.getDefaultHistory();
     }
 
     /**

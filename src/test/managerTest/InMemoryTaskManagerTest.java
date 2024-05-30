@@ -7,6 +7,7 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -14,7 +15,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryTaskManagerTest {
-    TaskManager taskManager = Managers.getDefault();
+
+
+    TaskManager taskManager;
+    @BeforeEach
+    public void beforeEach() {
+        taskManager = Managers.getDefault();
+    }
 
     /**
      * Тест, что InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;

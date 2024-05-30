@@ -16,6 +16,9 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Epic> epicsMap = new HashMap<Integer, Epic>();
     private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
+    public InMemoryTaskManager(HistoryManager defaultHistory) {
+    }
+
 
     /**
      * Методы для каждого из типа задач(Задача/Эпик/Подзадача):
@@ -83,7 +86,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Subtask> getSubTasksByEpicId(int Id) {
-        ArrayList<Integer> tasksList = epicsMap.get(Id).getSubtasksListIds();
+        List<Integer> tasksList = epicsMap.get(Id).getSubtasksListIds();
         ArrayList<Subtask> subTasksList = new ArrayList<>();
         for(Integer taskId : tasksList) {
             subTasksList.add(subtasksMap.get(taskId));
@@ -113,7 +116,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasksMap.put(subtask.getId(), subtask);
 
         int epicId = subtask.getEpicId();
-        ArrayList<Integer>subtasksList = epicsMap.get(epicId).getSubtasksListIds();
+        List<Integer>subtasksList = epicsMap.get(epicId).getSubtasksListIds();
         subtasksList.add(subtask.getId());
     }
 
@@ -171,7 +174,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Если остался один статус, то он становится статусом эпика
      */
     private void updateEpicStatus(Epic epic) {
-        ArrayList<Integer> epicsSubtasks = epic.getSubtasksListIds(); // лист с сабтасками эпика
+        List<Integer> epicsSubtasks = epic.getSubtasksListIds(); // лист с сабтасками эпика
         ArrayList<Status> subtaskStatuses = new ArrayList<>();        // лист для сбора статусов
         if (epicsSubtasks.isEmpty()) {                                // если у эпика нет подзадач то статус NEW
             epic.setStatus(Status.NEW);
