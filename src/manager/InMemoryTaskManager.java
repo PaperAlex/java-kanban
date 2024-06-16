@@ -14,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasksMap = new HashMap<Integer, Task>();
     private final Map<Integer, Subtask> subtasksMap = new HashMap<Integer, Subtask>();
     private final Map<Integer, Epic> epicsMap = new HashMap<Integer, Epic>();
-    private HistoryManager inMemoryHistoryManager;
+    private final HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager(HistoryManager defaultHistory) {
         inMemoryHistoryManager = defaultHistory;
@@ -95,7 +95,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Subtask> getSubTasksByEpicId(int id) {
-        List<Integer> tasksList = epicsMap.get(Id).getSubtasksListIds();
+        List<Integer> tasksList = epicsMap.get(id).getSubtasksListIds();
         ArrayList<Subtask> subTasksList = new ArrayList<>();
         for (Integer taskId : tasksList) {
             subTasksList.add(subtasksMap.get(taskId));
