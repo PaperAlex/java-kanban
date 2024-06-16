@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 
 
-class TaskTest {
+public class TaskTest {
 
     /**
      * Проверка, что экземпляры класса Task равны друг другу, если равен их id;
