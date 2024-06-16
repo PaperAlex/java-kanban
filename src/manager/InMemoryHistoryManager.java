@@ -3,22 +3,49 @@ package manager;
 import model.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> history = new ArrayList<>();
-    private final static int HISTORY_MAX= 10;
+    MyLinkedList history = new MyLinkedList();
 
     @Override
     public List<Task> getHistory() {
-        return history;
+        return history.getTasks();
     }
 
     @Override
     public void addHistory(Task task) {
-        if(history.size() >= HISTORY_MAX) {
-            history.removeFirst();
+        history.linkLast(task);
+    }
+
+    @Override
+    public void remove(int id) {
+        history.removeNode(id);
+    }
+
+    /**
+     * Реализация аналога класса LinkedHashMap
+     */
+    private static class MyLinkedList {
+
+        final Map<Integer, Node<Task>> historyMap = new HashMap<>();
+
+        public void linkLast(Task task) {
+            historyMap.put(task.getId(), new Node<>(task,null, null));
         }
-        history.add(task);
+
+        public void removeNode(int id) {
+            historyMap.remove(id);
+        }
+
+        public List<Task> getTasks() {
+            List<Task> listOfTasks = new ArrayList<>();
+            for (Node<Task> node : historyMap.values()) {
+                listOfTasks.add(node.task);
+            }
+            return listOfTasks;
+        }
     }
 }

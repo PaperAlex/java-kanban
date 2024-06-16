@@ -57,6 +57,10 @@ public class Main {
         System.out.println("Updated: " + taskManager.getSubtaskById(6));
         System.out.println("---");
 
+        Task task1v3 = new Task("Написать кОд", "Писать код на JAVA", 1, Status.DONE);
+        taskManager.updateTask(task1v3);
+        System.out.println("Updated: " + taskManager.getTaskById(1));
+
         System.out.println("printAllTasks");
         printAllTasks(taskManager);
         System.out.println("---");
