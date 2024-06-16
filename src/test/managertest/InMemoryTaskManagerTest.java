@@ -18,6 +18,7 @@ public class InMemoryTaskManagerTest {
 
 
     TaskManager taskManager;
+
     @BeforeEach
     public void beforeEach() {
         taskManager = Managers.getDefault();
@@ -114,7 +115,7 @@ public class InMemoryTaskManagerTest {
     }
 
     /**
-     *  Тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
+     * Тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
      */
     @Test
     public void immutabilityOfTask() {
@@ -122,7 +123,7 @@ public class InMemoryTaskManagerTest {
         taskManager.addTask(task);
         Task task2 = taskManager.getTaskById(task.getId());
 
-        Assertions.assertEquals(task.getId(), task2.getId(),"Поменялся ID");
+        Assertions.assertEquals(task.getId(), task2.getId(), "Поменялся ID");
 
     }
 
@@ -138,9 +139,9 @@ public class InMemoryTaskManagerTest {
         Task task1 = new Task("Написать код", "Писать код на JAVA быстро", 1, Status.IN_PROGRESS);
         taskManager.updateTask(task1);
         int task1Id = task1.getId();
-        Assertions.assertEquals(task1,task);
-        Assertions.assertEquals(task1,taskManager.getHistory().getFirst());
-        Assertions.assertEquals(task,taskManager.getHistory().getFirst());
+        Assertions.assertEquals(task1, task);
+        Assertions.assertEquals(task1, taskManager.getHistory().getFirst());
+        Assertions.assertEquals(task, taskManager.getHistory().getFirst());
     }
 
     /**
@@ -161,7 +162,7 @@ public class InMemoryTaskManagerTest {
         task1.setId(3);
         System.out.println("task1Id = " + task1.getId());
 
-        Assertions.assertNotEquals(task1,task);
+        Assertions.assertNotEquals(task1, task);
 
     }
 

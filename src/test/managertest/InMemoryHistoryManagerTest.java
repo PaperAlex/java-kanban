@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class InMemoryHistoryManagerTest {
 
     TaskManager taskManager;
+
     @BeforeEach
     public void beforeEach() {
         taskManager = Managers.getDefault();
@@ -62,11 +63,11 @@ public class InMemoryHistoryManagerTest {
         taskManager.getSubtaskById(subtask1.getId());
         taskManager.getTaskById(task.getId());
 
-        assertEquals(3,taskManager.getHistory().size(), "History is not Empty");
+        assertEquals(3, taskManager.getHistory().size(), "History is not Empty");
         taskManager.deleteTaskById(task.getId());
-        assertEquals(2,taskManager.getHistory().size(), "History is not Empty");
+        assertEquals(2, taskManager.getHistory().size(), "History is not Empty");
         taskManager.deleteEpicById(epic.getId());
-        assertEquals(1,taskManager.getHistory().size(), "History is not Empty");
+        assertEquals(1, taskManager.getHistory().size(), "History is not Empty");
     }
 
     @Test
@@ -88,7 +89,7 @@ public class InMemoryHistoryManagerTest {
         taskManager.getSubtaskById(subtask1.getId());
         taskManager.getTaskById(task.getId());
 
-        assertEquals(3,taskManager.getHistory().size(), "History is not Empty");
+        assertEquals(3, taskManager.getHistory().size(), "History is not Empty");
         taskManager.deleteSubtasks();
         taskManager.deleteEpics();
         taskManager.deleteTasks();
