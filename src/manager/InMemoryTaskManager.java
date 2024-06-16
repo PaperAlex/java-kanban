@@ -94,10 +94,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Subtask> getSubTasksByEpicId(int Id) {
+    public List<Subtask> getSubTasksByEpicId(int id) {
         List<Integer> tasksList = epicsMap.get(Id).getSubtasksListIds();
         ArrayList<Subtask> subTasksList = new ArrayList<>();
-        for(Integer taskId : tasksList) {
+        for (Integer taskId : tasksList) {
             subTasksList.add(subtasksMap.get(taskId));
         }
         return subTasksList;
@@ -125,7 +125,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasksMap.put(subtask.getId(), subtask);
 
         int epicId = subtask.getEpicId();
-        List<Integer>subtasksList = epicsMap.get(epicId).getSubtasksListIds();
+        List<Integer> subtasksList = epicsMap.get(epicId).getSubtasksListIds();
         subtasksList.add(subtask.getId());
     }
 
@@ -213,6 +213,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
     }
+
     @Override
     public List<Task> getHistory() {
         return inMemoryHistoryManager.getHistory();
