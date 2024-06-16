@@ -131,7 +131,7 @@ public class InMemoryTaskManagerTest {
      * Тест, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
      */
     @Test
-    void TaskKeepsInHistoryPreviousVersion() {
+    void taskKeepsInHistoryPreviousVersion() {
         Task task = new Task("Написать код", "Писать код на JAVA", 0, Status.NEW);
 
         taskManager.addTask(task);
@@ -148,7 +148,7 @@ public class InMemoryTaskManagerTest {
      * С помощью сеттеров экземпляры задач позволяют изменить любое своё поле.
      */
     @Test
-    void SetNewId() {
+    void setNewId() {
         Task task = new Task("Написать код", "Писать код на JAVA", 0, Status.NEW);
 
         taskManager.addTask(task);
