@@ -37,6 +37,8 @@ public interface TaskManager {
 
     List<Subtask> getSubTasksByEpicId(int id);
 
+    List<Integer> getSubTasksIdByEpicId(int id);
+
     /**
      * d. Создание. Сам объект должен передаваться в качестве параметра.
      */
