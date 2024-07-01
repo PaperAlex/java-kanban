@@ -34,7 +34,10 @@ public interface TaskManager {
     Epic getEpicById(int id);
 
     Subtask getSubtaskById(int id);
-    List<Subtask> getSubTasksByEpicId(int Id);
+
+    List<Subtask> getSubTasksByEpicId(int id);
+
+    List<Integer> getSubTasksIdByEpicId(int id);
 
     /**
      * d. Создание. Сам объект должен передаваться в качестве параметра.

@@ -1,4 +1,4 @@
-package managerTest;
+package managertest;
 
 import manager.HistoryManager;
 import manager.Managers;
@@ -9,14 +9,16 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HistoryManagerTest {
 
     HistoryManager inMemoryHistoryManager;
+
     @BeforeEach
     public void beforeEach() {
-        inMemoryHistoryManager =  Managers.getDefaultHistory();
+        inMemoryHistoryManager = Managers.getDefaultHistory();
     }
 
     /**
