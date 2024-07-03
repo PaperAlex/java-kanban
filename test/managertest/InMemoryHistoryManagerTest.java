@@ -62,6 +62,7 @@ public class InMemoryHistoryManagerTest {
         taskManager.getEpicById(epic.getId());
         taskManager.getSubtaskById(subtask1.getId());
         taskManager.getTaskById(task.getId());
+
         System.out.println(taskManager.getHistory());
 
         assertEquals(3, taskManager.getHistory().size(), "History is not Empty");
