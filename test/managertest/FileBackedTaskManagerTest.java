@@ -23,16 +23,12 @@ public class FileBackedTaskManagerTest {
     public void beforeEach() throws IOException {
         taskManager = Managers.getDefaultFile();
 
-        file = new File("./resources/testing_java.csv");
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
-
         /**
          * Создаем таски и сохраняем в файлы
          */
 
         Task task = new Task("Test addHistory", "Test addHistory description", 0, Status.NEW);
         taskManager.addTask(task);
-        fileBackedTaskManager.addTask(task);
 
         Subtask subtask1 = new Subtask("Test addNewEpicTest", "addNewEpicTest description",
                 0, Status.NEW, 2);
@@ -43,9 +39,7 @@ public class FileBackedTaskManagerTest {
         taskManager.addEpic(epic);
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
-        fileBackedTaskManager.addEpic(epic);
-        fileBackedTaskManager.addSubtask(subtask1);
-        fileBackedTaskManager.addSubtask(subtask2);
+
     }
 
     /**

@@ -1,7 +1,5 @@
 package manager;
 
-import java.io.File;
-
 public class Managers {
     public static TaskManager getDefault() {
 //        return new InMemoryTaskManager(getDefaultHistory());
@@ -13,6 +11,8 @@ public class Managers {
     }
 
     public static FileBackedTaskManager getDefaultFile() {
-        return new FileBackedTaskManager(new File("./resources/java-kanban.csv"));
+      //  return new FileBackedTaskManager(new File("./resources/java-kanban.csv"));
+        FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.createFileBackedTaskManager();
+        return fileBackedTaskManager;
     }
 }

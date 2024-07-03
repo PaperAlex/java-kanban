@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.ManagerLoadException;
 import exceptions.ManagerSaveException;
 import model.Status;
 import model.Types;
@@ -17,8 +18,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private static final String HEADER = "id,type,name,status,description,epic_id";
 
-    public FileBackedTaskManager(File file) {
+    private FileBackedTaskManager(File file) {
         this.file = file;
+    }
+    public static FileBackedTaskManager createFileBackedTaskManager() {
+        return new FileBackedTaskManager(new File("./resources/java-kanban.csv"));
     }
 
     /**
@@ -115,7 +119,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException exception) {
-            throw new ManagerSaveException(exception.getMessage());
+            throw new ManagerLoadException(exception.getMessage());
         }
         return manager;
     }
