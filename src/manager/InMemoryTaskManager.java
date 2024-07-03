@@ -14,11 +14,13 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasksMap = new HashMap<Integer, Task>();
     private final Map<Integer, Subtask> subtasksMap = new HashMap<Integer, Subtask>();
     private final Map<Integer, Epic> epicsMap = new HashMap<Integer, Epic>();
-    private final HistoryManager taskManager;
+//    private final HistoryManager taskManager;
 
-    public InMemoryTaskManager(HistoryManager defaultHistory) {
-        taskManager = defaultHistory;
-    }
+//    public InMemoryTaskManager(HistoryManager defaultHistory) {
+//        taskManager = defaultHistory;
+//    }
+
+    private final HistoryManager taskManager = Managers.getDefaultHistory();
 
     /**
      * Методы для каждого из типа задач(Задача/Эпик/Подзадача):
