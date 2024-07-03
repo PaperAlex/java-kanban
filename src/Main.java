@@ -6,9 +6,7 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 
 public class Main {
 
@@ -16,8 +14,9 @@ public class Main {
 
         /* Старый менеджер */
         /* TaskManager taskManager = Managers.getDefault(); */
-        /**
-         * Новый менеджер FileBackedTaskManager
+
+        /*
+          Новый менеджер FileBackedTaskManager
          */
         TaskManager taskManager = new Managers().getDefaultFile();
 
