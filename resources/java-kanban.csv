@@ -1,0 +1,5 @@
+id,type,name,status,description,epic_id
+1,TASK,Test addHistory,NEW,Test addHistory description
+2,EPIC,Test addNewEpic,NEW,Test addNewEpic description
+3,SUBTASK,Test addNewEpicTest,NEW,addNewEpicTest description,2
+4,SUBTASK,Test addNewEpicTest2,NEW,addNewEpicTest description2,2

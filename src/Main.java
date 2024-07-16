@@ -1,3 +1,4 @@
+import manager.FileBackedTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import model.Epic;
@@ -5,10 +6,19 @@ import model.Status;
 import model.Subtask;
 import model.Task;
 
+import java.io.File;
+
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = Managers.getDefault();
+
+        /* Старый менеджер */
+        /* TaskManager taskManager = Managers.getDefault(); */
+
+        /*
+          Новый менеджер FileBackedTaskManager
+         */
+        TaskManager taskManager = new Managers().getDefaultFile();
 
 
         Task task1 = new Task("Написать код", "Писать код на JAVA", 0, Status.NEW);
@@ -65,6 +75,16 @@ public class Main {
         printAllTasks(taskManager);
         System.out.println("---");
 
+        System.out.println("fileBackedTaskManager");
+        FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(
+                new File("resources/java-kanban.csv"));
+        System.out.println("Tasks: " + fileBackedTaskManager.getTasksMap());
+        System.out.println();
+        System.out.println("Epics: " + fileBackedTaskManager.getEpicsMap());
+        System.out.println();
+        System.out.println("Subtasks: " + fileBackedTaskManager.getSubtasksMap());
+        System.out.println("---");
+        System.out.println();
 
         /* f. Удаление по идентификатору. */
         System.out.println("Удаляем таск, сабтаск и эпик по id:");
@@ -79,6 +99,7 @@ public class Main {
         System.out.println("Subtasks: " + taskManager.getSubtasksMap());
         System.out.println();
 
+
         taskManager.deleteSubtasks();
         taskManager.deleteEpics();
         taskManager.deleteTasks();
@@ -87,6 +108,8 @@ public class Main {
         System.out.println("Tasks: " + taskManager.getTasksMap());
         System.out.println("Epics: " + taskManager.getEpicsMap());
         System.out.println("Subtasks: " + taskManager.getSubtasksMap());
+
+
     }
 
     private static void printAllTasks(TaskManager taskManager) {
