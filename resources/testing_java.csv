@@ -1,5 +1,5 @@
-id,type,name,status,description,epic_id
-1,TASK,Test addHistory,NEW,Test addHistory description
-2,EPIC,Test addNewEpic,NEW,Test addNewEpic description
-3,SUBTASK,Test addNewEpicTest,NEW,addNewEpicTest description,2
-4,SUBTASK,Test addNewEpicTest2,NEW,addNewEpicTest description2,2
+id,type,name,status,description,startTime,endTime,duration,epic_id,
+1,TASK,Test addHistory,NEW,Test addHistory description,00:00 01.07.24,16:40 01.07.24,PT16H40M
+2,EPIC,Test addNewEpic,NEW,Test addNewEpic description,00:00 02.07.24,16:40 02.07.24,PT33H20M
+3,SUBTASK,Test addNewEpicTest,NEW,addNewEpicTest description,00:00 02.07.24,16:40 02.07.24,PT16H40M,2
+4,SUBTASK,Test addNewEpicTest2,NEW,addNewEpicTest2 description2,00:00 03.07.24,16:40 03.07.24,PT16H40M,2
