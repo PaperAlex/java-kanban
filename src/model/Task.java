@@ -76,15 +76,18 @@ public class Task {
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
+
     public LocalDateTime getEndTime() {
         return startTime.plusMinutes(duration.toMinutes());
     }
+
     public String getStartTimeToString() {
         if (startTime == null) {
             return "null";
         }
        return startTime.format(DATE_TIME_FORMATTER);
     }
+
     public String getEndTimeToString() {
         if (startTime == null) {
             return "null";
