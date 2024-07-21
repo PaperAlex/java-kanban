@@ -41,7 +41,7 @@ public class Epic extends Task {
 
     public String getEndTimeToString() {
         if (endTime == null) {
-            return "null";
+            return "";
         }
         return endTime.format(DATE_TIME_FORMATTER);
     }
