@@ -281,8 +281,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void checkCrossTasks(Task task) {
-        final ManagerTimeException managerTimeException = new ManagerTimeException
-                ("Задачи пересекаются по времени выполнения!");
+        final ManagerTimeException managerTimeException = new ManagerTimeException("Задачи пересекаются по времени выполнения!");
         List<Task> prioritizedTasks = getPrioritizedTasks();
         for (Task prioritizedTask : prioritizedTasks) {
             if ((!task.getEndTime().isAfter(prioritizedTask.getStartTime())) ||
