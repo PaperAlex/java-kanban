@@ -83,14 +83,14 @@ public class Task {
 
     public String getStartTimeToString() {
         if (startTime == null) {
-            return "null";
+            return "";
         }
        return startTime.format(DATE_TIME_FORMATTER);
     }
 
     public String getEndTimeToString() {
         if (startTime == null) {
-            return "null";
+            return "";
         }
         return getEndTime().format(DATE_TIME_FORMATTER);
     }
