@@ -8,15 +8,19 @@ import model.Task;
 import model.Epic;
 import model.Subtask;
 
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
 
-    private static final String HEADER = "id,type,name,status,description,epic_id";
+    private static final String HEADER = "id,type,name,status,description,startTime,endTime,duration,epic_id,";
+
+    static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yy");
 
     private FileBackedTaskManager(File file) {
         this.file = file;
@@ -34,7 +38,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 + task.getType() + ","
                 + task.getName() + ","
                 + task.getStatus() + ","
-                + task.getDescription();
+                + task.getDescription() + ","
+                + task.getStartTimeToString() + ","
+                + task.getEndTimeToString() + ","
+                + task.getDuration();
     }
 
     private String toString(Subtask subtask) {
@@ -43,6 +50,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 + subtask.getName() + ","
                 + subtask.getStatus() + ","
                 + subtask.getDescription() + ","
+                + subtask.getStartTimeToString() + ","
+                + subtask.getEndTimeToString() + ","
+                + subtask.getDuration() + ","
                 + subtask.getEpicId();
     }
 
@@ -51,7 +61,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 + epic.getType() + ","
                 + epic.getName() + ","
                 + epic.getStatus() + ","
-                + epic.getDescription();
+                + epic.getDescription() + ","
+                + epic.getStartTimeToString() + ","
+                + epic.getEndTimeToString() + ","
+                + epic.getDuration();
     }
 
 
@@ -65,15 +78,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = csvString[2];
         Status status = Status.valueOf(csvString[3]);
         String description = csvString[4];
+        LocalDateTime startTime = LocalDateTime.parse(csvString[5], FORMATTER);
+        LocalDateTime endTime = LocalDateTime.parse(csvString[6], FORMATTER);
+        long duration = Duration.parse(csvString[7]).toMinutes();
 
         switch (type) {
             case TASK:
-                return new Task(name, description, id, status);
+                return new Task(name, description, id, status, duration, startTime);
             case EPIC:
-                return new Epic(name, description, id, status);
+                return new Epic(name, description, id, status, duration, startTime, endTime);
             case SUBTASK:
-                int epicId = Integer.parseInt(csvString[5]);
-                return new Subtask(name, description, id, status, epicId);
+                int epicId = Integer.parseInt(csvString[8]);
+                return new Subtask(name, description, id, status, epicId, duration, startTime);
         }
         return null;
     }

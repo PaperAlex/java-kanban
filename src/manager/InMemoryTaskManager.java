@@ -1,10 +1,13 @@
 package manager;
 
+import exceptions.ManagerTimeException;
 import model.Epic;
 import model.Status;
 import model.Subtask;
 import model.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.*;
 
@@ -22,6 +25,9 @@ public class InMemoryTaskManager implements TaskManager {
 //    }
 
     private final HistoryManager taskManager = Managers.getDefaultHistory();
+    protected Set<Task> prioritizedSet = new TreeSet<>(comparator);
+    static final Comparator<Task> comparator = Comparator.comparing(Task::getStartTime,
+            Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(Task::getId);
 
 
     /**
@@ -50,6 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTasks() {
         for (Task task : tasksMap.values()) {
             taskManager.remove(task.getId());
+            prioritizedSet.remove(task);
         }
         tasksMap.clear();
     }
@@ -112,8 +119,10 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void addTask(Task task) {
+        checkCrossTasks(task);
         task.setId(++idGenerator);
         tasksMap.put(task.getId(), task);
+        prioritizedSet.add(task);
     }
 
     @Override
@@ -130,11 +139,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addSubtask(Subtask subtask) {
+        checkCrossTasks(subtask);
         subtask.setId(++idGenerator);
         subtasksMap.put(subtask.getId(), subtask);
 
         int epicId = subtask.getEpicId();
         getSubTasksIdByEpicId(epicId).add(subtask.getId());
+        updateEpicTime(epicId);
+        prioritizedSet.add(subtask);
     }
 
     /**
@@ -219,11 +231,65 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(subtaskStatuses.getFirst());
         }
+        updateEpicTime(epic.getId());
 
+    }
+
+    private void updateEpicTime(int epicId) {
+        List<Integer> subtusksList = epicsMap.get(epicId).getSubtasksListIds();
+
+        if (subtusksList.isEmpty()) {
+            epicsMap.get(epicId).setDuration(Duration.ZERO);
+            epicsMap.get(epicId).setStartTime(null);
+            epicsMap.get(epicId).setEndTime(null);
+        }
+        LocalDateTime epicStartTime = null;
+        LocalDateTime epicEndTime = null;
+        Duration epicDuration = Duration.ZERO;
+        for (Integer subtaskId : subtusksList) {
+            Subtask subtask = subtasksMap.get(subtaskId);
+            LocalDateTime subTaskStartTime = subtask.getStartTime();
+            LocalDateTime subTaskEndTime = subtask.getEndTime();
+
+            if (subTaskStartTime != null) {
+                if (epicStartTime == null || subTaskStartTime.isBefore(epicStartTime)) {
+                    epicStartTime = subTaskStartTime;
+                }
+            }
+
+            if (subTaskEndTime != null) {
+                if (epicEndTime == null || subTaskEndTime.isBefore(epicEndTime)) {
+                    epicEndTime = subTaskEndTime;
+                }
+            }
+            epicDuration = epicDuration.plus(subtasksMap.get(subtaskId).getDuration());
+        }
+
+        epicsMap.get(epicId).setStartTime(epicStartTime);
+        epicsMap.get(epicId).setEndTime(epicEndTime);
+        epicsMap.get(epicId).setDuration(epicDuration);
     }
 
     @Override
     public List<Task> getHistory() {
         return taskManager.getHistory();
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedSet);
+    }
+
+    private void checkCrossTasks(Task task) {
+        final ManagerTimeException managerTimeException = new ManagerTimeException("Задачи пересекаются по времени выполнения!");
+        List<Task> prioritizedTasks = getPrioritizedTasks();
+        for (Task prioritizedTask : prioritizedTasks) {
+            if ((!task.getEndTime().isAfter(prioritizedTask.getStartTime())) ||
+                    (!task.getStartTime().isBefore(prioritizedTask.getEndTime()))) {
+                continue;
+            }
+            System.out.println(managerTimeException.getMessage());
+
+        }
     }
 }

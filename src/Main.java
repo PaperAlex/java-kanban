@@ -7,6 +7,7 @@ import model.Subtask;
 import model.Task;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 public class Main {
 
@@ -21,8 +22,10 @@ public class Main {
         TaskManager taskManager = new Managers().getDefaultFile();
 
 
-        Task task1 = new Task("Написать код", "Писать код на JAVA", 0, Status.NEW);
-        Task task2 = new Task("Написать тест", "Написать тест на JAVA", 0, Status.NEW);
+        Task task1 = new Task("Написать код", "Писать код на JAVA", 0, Status.NEW,
+                1000, LocalDateTime.of(2024, 7,1,0,0));
+        Task task2 = new Task("Написать тест", "Написать тест на JAVA", 0, Status.NEW,
+                10000, LocalDateTime.of(2024, 7,2,0,0));
         taskManager.addTask(task1);
         taskManager.addTask(task2);
 
@@ -31,12 +34,15 @@ public class Main {
         taskManager.addEpic(epic1);
         taskManager.addEpic(epic2);
 
-        Subtask epic1subtask1 = new Subtask("Мясо", "Индейка", 0, Status.NEW, 3);
+        Subtask epic1subtask1 = new Subtask("Мясо", "Индейка", 0, Status.NEW, 3,
+                1000, LocalDateTime.of(2024, 8,3,0,0));
         taskManager.addSubtask(epic1subtask1);
-        Subtask epic1subtask2 = new Subtask("Напитки", "Сок", 0, Status.NEW, 3);
+        Subtask epic1subtask2 = new Subtask("Напитки", "Сок", 0, Status.NEW, 3,
+                2000, LocalDateTime.of(2024, 8,4,0,0));
         taskManager.addSubtask(epic1subtask2);
 
-        Subtask epic2subtask3 = new Subtask("Жим", "Пять подходов", 0, Status.NEW, 4);
+        Subtask epic2subtask3 = new Subtask("Жим", "Пять подходов", 0, Status.NEW, 4,
+                3000, LocalDateTime.of(2024, 6,5,0,0));
         taskManager.addSubtask(epic2subtask3);
 
         /* a. Получение списка всех задач. */
@@ -51,9 +57,11 @@ public class Main {
 
 
         /* e. Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра. */
-        Task task1v2 = new Task("Написать код", "Писать код на JAVA", 1, Status.IN_PROGRESS);
+        Task task1v2 = new Task("Написать код", "Писать код на JAVA", 1, Status.IN_PROGRESS,
+                1000, LocalDateTime.of(2024, 7,1,0,0));
         Epic epic1v2 = new Epic("Сходить на рынок", "Купить продукты", 3, Status.NEW);
-        Subtask epic1subtask2v2 = new Subtask("Напитки", "Сок", 6, Status.IN_PROGRESS, 3);
+        Subtask epic1subtask2v2 = new Subtask("Напитки", "Сок", 6, Status.IN_PROGRESS, 3,
+                1000, LocalDateTime.of(2024, 8,2,0,0));
 
         taskManager.updateTask(task1v2);
         taskManager.updateSubtask(epic1subtask2v2);
@@ -67,7 +75,8 @@ public class Main {
         System.out.println("Updated: " + taskManager.getSubtaskById(6));
         System.out.println("---");
 
-        Task task1v3 = new Task("Написать кОд", "Писать код на JAVA", 1, Status.DONE);
+        Task task1v3 = new Task("Написать кОд", "Писать код на JAVA", 1, Status.DONE,
+                1000, LocalDateTime.of(2024, 7,1,0,0));
         taskManager.updateTask(task1v3);
         System.out.println("Updated: " + taskManager.getTaskById(1));
 

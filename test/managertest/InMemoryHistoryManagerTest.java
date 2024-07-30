@@ -10,6 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryHistoryManagerTest {
@@ -26,13 +29,14 @@ public class InMemoryHistoryManagerTest {
      */
     @Test
     public void addHistory() {
-        Task task = new Task("Test addHistory", "Test addHistory description", 0, Status.NEW);
+        Task task = new Task("Test addHistory", "Test addHistory description", 0, Status.NEW,
+                1000, LocalDateTime.of(2024, 7, 5, 0, 0));
         taskManager.addTask(task);
 
         Subtask subtask1 = new Subtask("Test addNewEpicTest", "addNewEpicTest description",
-                0, Status.NEW, 2);
+                0, Status.NEW, 2, 1000, LocalDateTime.of(2024, 7, 1, 0, 0));
         Subtask subtask2 = new Subtask("Test addNewEpicTest2", "addNewEpicTest description2",
-                0, Status.NEW, 2);
+                0, Status.NEW, 2, 1000, LocalDateTime.of(2024, 7, 2, 0, 0));
         Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description",
                 0, Status.NEW);
         taskManager.addEpic(epic);
@@ -46,13 +50,14 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     void getHistory() {
-        Task task = new Task("Test getHistory", "Test getHistory description", 0, Status.NEW);
+        Task task = new Task("Test getHistory", "Test getHistory description", 0, Status.NEW,
+                1000, LocalDateTime.of(2024, 7, 5, 0, 0));
         taskManager.addTask(task);
 
         Subtask subtask1 = new Subtask("Test addNewEpicTest", "addNewEpicTest description",
-                0, Status.NEW, 2);
+                0, Status.NEW, 2, 1000, LocalDateTime.of(2024, 7, 1, 0, 0));
         Subtask subtask2 = new Subtask("Test addNewEpicTest2", "addNewEpicTest description2",
-                0, Status.NEW, 2);
+                0, Status.NEW, 2, 1000, LocalDateTime.of(2024, 7, 2, 0, 0));
         Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description",
                 0, Status.NEW);
         taskManager.addEpic(epic);
@@ -74,13 +79,14 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     void deleteHistory() {
-        Task task = new Task("Test deleteHistory", "Test deleteHistory description", 0, Status.NEW);
+        Task task = new Task("Test deleteHistory", "Test deleteHistory description", 0, Status.NEW,
+                1000, LocalDateTime.of(2024, 7, 5, 0, 0));
         taskManager.addTask(task);
 
         Subtask subtask1 = new Subtask("Test addNewEpicTest", "addNewEpicTest description",
-                0, Status.NEW, 2);
+                0, Status.NEW, 2, 1000, LocalDateTime.of(2024, 7, 1, 0, 0));
         Subtask subtask2 = new Subtask("Test addNewEpicTest2", "addNewEpicTest description2",
-                0, Status.NEW, 2);
+                0, Status.NEW, 2, 1000, LocalDateTime.of(2024, 7, 2, 0, 0));
         Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description",
                 0, Status.NEW);
         taskManager.addEpic(epic);
@@ -97,6 +103,45 @@ public class InMemoryHistoryManagerTest {
         taskManager.deleteTasks();
         assertEquals(0, taskManager.getHistory().size(), "History is Not Empty");
 
+    }
+
+    @Test
+    void deleteTasksFormTheMiddle() {
+        Task task = new Task("Test deleteHistory", "Test deleteHistory description", 0, Status.NEW,
+                1000, LocalDateTime.of(2024, 8, 5, 0, 0));
+        taskManager.addTask(task);
+        Task task2 = new Task("Test deleteHistory", "Test deleteHistory description", 0, Status.NEW,
+                1000, LocalDateTime.of(2024, 7, 5, 0, 0));
+        taskManager.addTask(task2);
+
+        Subtask subtask1 = new Subtask("Test addNewEpicTest", "addNewEpicTest description",
+                0, Status.NEW, 3, 1000, LocalDateTime.of(2024, 7, 1, 0, 0));
+        Subtask subtask2 = new Subtask("Test addNewEpicTest2", "addNewEpicTest description2",
+                0, Status.NEW, 3, 1000, LocalDateTime.of(2024, 7, 2, 0, 0));
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description",
+                0, Status.NEW);
+        taskManager.addEpic(epic);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+
+        taskManager.getEpicById(epic.getId());
+        taskManager.getSubtaskById(subtask1.getId());
+        taskManager.getTaskById(task.getId());
+        taskManager.getTaskById(task2.getId());
+        assertEquals(4, taskManager.getHistory().size(), "History is Empty");
+
+        List<Task> taskList = taskManager.getHistory();
+
+        assertEquals(4, taskList.size(), "В истории задач не 3 записи");
+        System.out.println(taskManager.getHistory());
+
+        taskManager.deleteTaskById(task2.getId());
+
+        System.out.println(taskManager.getHistory());
+        List<Task> taskListNew = taskManager.getHistory();
+        Task middleTaskNew = taskListNew.get(1);
+
+        assertNotEquals(task2, middleTaskNew, "Элемент не удален из истории!");
     }
 
 }

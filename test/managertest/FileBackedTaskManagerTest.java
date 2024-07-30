@@ -2,11 +2,7 @@ package managertest;
 
 import manager.FileBackedTaskManager;
 import manager.Managers;
-import manager.TaskManager;
-import model.Epic;
-import model.Status;
-import model.Subtask;
-import model.Task;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,30 +11,24 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     private File file;
-    private TaskManager taskManager;
 
     @BeforeEach
     public void beforeEach() throws IOException {
-        taskManager = Managers.getDefaultFile();
+        super.taskManager = Managers.getDefaultFile();
+
 
         /**
          * Создаем таски и сохраняем в файлы
          */
 
-        Task task = new Task("Test addHistory", "Test addHistory description", 0, Status.NEW);
-        taskManager.addTask(task);
+        makeTasks();
 
-        Subtask subtask1 = new Subtask("Test addNewEpicTest", "addNewEpicTest description",
-                0, Status.NEW, 2);
-        Subtask subtask2 = new Subtask("Test addNewEpicTest2", "addNewEpicTest description2",
-                0, Status.NEW, 2);
-        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description",
-                0, Status.NEW);
-        taskManager.addEpic(epic);
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
+        taskManager.getTaskById(1);
+        taskManager.getSubtaskById(3);
+        taskManager.getSubtaskById(4);
+        taskManager.getEpicById(2);
 
     }
 
