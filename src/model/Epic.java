@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
-    private List<Integer> subtasksListIds = new ArrayList<>();
-    private LocalDateTime endTime;
+    private transient List<Integer> subtasksListIds = new ArrayList<>();
+    private transient LocalDateTime endTime;
 
     public Epic(String name, String description, Integer id, Status status, long duration, LocalDateTime startTime,
                 LocalDateTime endTime) {
@@ -14,8 +14,16 @@ public class Epic extends Task {
         this.endTime = endTime;
     }
 
+    public Epic(String name, String description, Integer id, Status status, long duration, LocalDateTime startTime) {
+        super(name, description, id, status, duration, startTime);
+    }
+
     public Epic(String name, String description, Integer id, Status status) {
         super(name, description, id, status);
+    }
+
+    public Epic(String name, String description, Integer id) {
+        super(name, description, id);
     }
 
     public List<Integer> getSubtasksListIds() {
@@ -60,6 +68,7 @@ public class Epic extends Task {
                 ", duration =" + super.getDuration().toMinutes() +
                 ", startTime = " + getStartTimeToString() +
                 ", endTime = " + getEndTimeToString() +
+                ", subtasksListIds = " + subtasksListIds +
                 '}';
     }
 }
