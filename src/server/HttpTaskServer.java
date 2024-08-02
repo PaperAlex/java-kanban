@@ -18,7 +18,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class HttpTaskServer {
-    private final int PORT = 8080;
+    private final int port = 8080;
     private final HttpServer httpServer;
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -27,7 +27,7 @@ public class HttpTaskServer {
             .create();
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {
-        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
+        httpServer = HttpServer.create(new InetSocketAddress(port), 0);
         httpServer.createContext("/tasks", new TasksHandler(taskManager, gson));
         httpServer.createContext("/epics", new EpicsHandler(taskManager, gson));
         httpServer.createContext("/subtasks", new SubtaskHandler(taskManager, gson));
@@ -37,12 +37,12 @@ public class HttpTaskServer {
 
     public void start() {
         httpServer.start();
-        System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+        System.out.println("HTTP-сервер запущен на " + port + " порту!");
     }
 
     public void stop() {
         httpServer.stop(0);
-        System.out.println("Завершили работу сервера на " + PORT + " порту!");
+        System.out.println("Завершили работу сервера на " + port + " порту!");
     }
 
 
