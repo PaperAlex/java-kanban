@@ -22,6 +22,7 @@ public class HttpTaskServer {
     private final HttpServer httpServer;
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
+            .serializeNulls()
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();
@@ -45,6 +46,9 @@ public class HttpTaskServer {
         System.out.println("Завершили работу сервера на " + port + " порту!");
     }
 
+    public Gson getGson() {
+        return this.gson;
+    }
 
     public static void main(String[] args) throws IOException {
 
@@ -99,4 +103,5 @@ public class HttpTaskServer {
             System.out.println(task);
         }
     }
+
 }

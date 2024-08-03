@@ -1,15 +1,12 @@
 package managertest;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import manager.Managers;
 import manager.TaskManager;
 import model.Epic;
 import model.Subtask;
 import org.junit.jupiter.api.Assertions;
-import util.LocalDateTimeAdapter;
-import util.DurationAdapter;
 import model.Status;
 import model.Task;
 import org.junit.jupiter.api.AfterEach;
@@ -23,7 +20,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,20 +28,43 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpTaskServerTest {
 
-    TaskManager taskManager = Managers.getDefaultFile();
-    HttpTaskServer taskServer = new HttpTaskServer(taskManager);
-    Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .serializeNulls()
-            .registerTypeAdapter(Duration.class, new DurationAdapter())
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-            .create();
+    TaskManager taskManager;
+    HttpTaskServer taskServer;
+    Gson gson;
 
-    public HttpTaskServerTest() throws IOException {
+    public HttpRequest getRequest(URI url) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(url)
+                .GET()
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
+        return request;
+    }
+
+    public HttpRequest postRequest(URI url, HttpRequest.BodyPublisher body) {
+    HttpRequest request = HttpRequest.newBuilder()
+            .POST(body)
+            .uri(url)
+            .version(HttpClient.Version.HTTP_1_1)
+            .build();
+    return request;
+    }
+
+    public HttpRequest deleteRequest(URI url) {
+    HttpRequest request = HttpRequest.newBuilder()
+            .DELETE()
+            .uri(url)
+            .version(HttpClient.Version.HTTP_1_1)
+            .build();
+    return request;
     }
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws IOException {
+        taskManager = Managers.getDefaultFile();
+        taskServer = new HttpTaskServer(taskManager);
+        gson = taskServer.getGson();
+
         taskManager.deleteTasks();
         taskManager.deleteSubtasks();
         taskManager.deleteEpics();
@@ -79,12 +98,7 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/test");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(url)
-                .GET()
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(getRequest(url), HttpResponse.BodyHandlers.ofString());
 
         assertEquals(404, response.statusCode(), "Expecting code: 404, get code: " + response.statusCode());
     }
@@ -99,13 +113,7 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(getRequest(url), HttpResponse.BodyHandlers.ofString());
 
         Type taskType = new TypeToken<List<Task>>() {
         }.getType();
@@ -125,13 +133,7 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/epics");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(getRequest(url), HttpResponse.BodyHandlers.ofString());
 
         Type epicType = new TypeToken<List<Epic>>() {
         }.getType();
@@ -151,13 +153,7 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/subtasks");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(getRequest(url), HttpResponse.BodyHandlers.ofString());
 
         Type subtaskType = new TypeToken<List<Subtask>>() {
         }.getType();
@@ -175,13 +171,7 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks/1");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(getRequest(url), HttpResponse.BodyHandlers.ofString());
 
         Task task = gson.fromJson(response.body(), Task.class);
 
@@ -197,13 +187,7 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/epics/2");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(getRequest(url), HttpResponse.BodyHandlers.ofString());
 
         Epic epic = gson.fromJson(response.body(), Epic.class);
 
@@ -219,13 +203,7 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/subtasks/3");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(getRequest(url), HttpResponse.BodyHandlers.ofString());
 
         Subtask subtask = gson.fromJson(response.body(), Subtask.class);
 
@@ -243,13 +221,8 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(body)
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(postRequest(url, body), HttpResponse.BodyHandlers.ofString());
 
         for (Task t : taskManager.getTasksMap()) {
             System.out.println(t);
@@ -270,13 +243,8 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/epics");
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(body)
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(postRequest(url, body), HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
         assertEquals(2, taskManager.getEpicsMap().size(), "No return subtasks");
@@ -293,13 +261,8 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/subtasks");
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(body)
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(postRequest(url, body), HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
         assertEquals(3, taskManager.getSubtasksMap().size(), "No return subtasks");
@@ -311,13 +274,8 @@ public class HttpTaskServerTest {
     void deleteTaskByIdTest() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks/1");
-        HttpRequest request = HttpRequest.newBuilder()
-                .DELETE()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(deleteRequest(url), HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode(), "Cod response is not a 200");
         Assertions.assertTrue(taskManager.getTasksMap().isEmpty(), "Task are not deleted");
@@ -327,13 +285,8 @@ public class HttpTaskServerTest {
     void deleteEpicByIdTest() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/epics/2");
-        HttpRequest request = HttpRequest.newBuilder()
-                .DELETE()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(deleteRequest(url), HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode(), "Cod response is not a 200");
         Assertions.assertTrue(taskManager.getEpicsMap().isEmpty(), "Task are not deleted");
@@ -343,13 +296,8 @@ public class HttpTaskServerTest {
     void deleteSubtaskByIdTest() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/subtasks/3");
-        HttpRequest request = HttpRequest.newBuilder()
-                .DELETE()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(deleteRequest(url), HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode(), "Cod response is not a 200");
         assertEquals(1, taskManager.getSubtasksMap().size());
@@ -362,15 +310,11 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/history");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(getRequest(url), HttpResponse.BodyHandlers.ofString());
         List<Task> history = taskManager.getHistory();
         System.out.println(history);
 
+        assertEquals(200, response.statusCode(), "Cod response is not a 200");
         assertEquals(1, history.size());
         assertEquals("Test server1 description", history.getFirst().getDescription());
 
@@ -381,13 +325,7 @@ public class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/prioritized");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(getRequest(url), HttpResponse.BodyHandlers.ofString());
 
         Type taskType = new TypeToken<List<Task>>() {
         }.getType();
