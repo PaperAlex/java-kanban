@@ -33,6 +33,12 @@ public class Task {
         this.status = status;
     }
 
+    public Task(String name, String description, Integer id) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }
